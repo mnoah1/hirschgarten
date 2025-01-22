@@ -1,12 +1,15 @@
-#if( $pythonEnabled == "true" && $bazel8OrAbove == "true" )
+#if( $pythonEnabled == "true" )
+#if( $bazel8OrAbove == "true")
 load("@rules_python//python:defs.bzl", "PyInfo", "PyRuntimeInfo")
+#end
+load("@rules_python//python:defs.bzl", PyInfoRulesPython = "PyInfo", PyRuntimeInfoRulesPython = "PyRuntimeInfo")
 #end
 
 load("//aspects:utils/utils.bzl", "create_struct", "file_location", "to_file_location")
 
 def py_info_in_target(target):
     #if( $pythonEnabled == "true" )
-    return PyInfo in target
+    return PyInfo in target or PyInfoRulesPython in target
 
     #else
     return False
@@ -14,7 +17,7 @@ def py_info_in_target(target):
 
 def py_runtime_info_in_target(target):
     #if( $pythonEnabled == "true" )
-    return PyRuntimeInfo in target
+    return PyRuntimeInfo in target or PyRuntimeInfoRulesPython in target
 
     #else
     return False
@@ -24,6 +27,8 @@ def get_py_info(target):
     #if( $pythonEnabled == "true" )
     if PyInfo in target:
         return target[PyInfo]
+    elif PyInfoRulesPython in target:
+        return target[PyInfoRulesPython]
     else:
         return None
 
@@ -35,6 +40,8 @@ def get_py_runtime_info(target):
     #if( $pythonEnabled == "true" )
     if PyRuntimeInfo in target:
         return target[PyRuntimeInfo]
+    elif PyRuntimeInfoRulesPython in target:
+        return target[PyRuntimeInfoRulesPython]
     else:
         return None
 
